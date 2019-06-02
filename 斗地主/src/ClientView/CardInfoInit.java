@@ -23,6 +23,10 @@ public class CardInfoInit {
 	private static List<JLabel> list = new ArrayList<>();
 	//存放牌的名字和它对应的信息
 	private static Map<Integer,Integer> cardShow = new HashMap<>();
+	//建三张表，用来放牌在界面里的的属性和对应的显示信息
+	public static Map<JLabel,Integer> mapL = new HashMap<>();
+	public static Map<JLabel,Integer> mapB = new HashMap<>();
+	public static Map<JLabel,Integer> mapR = new HashMap<>();
 	
 	public CardInfoInit() {
 		int[] cardInfo = {3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,11,11,11,11,
@@ -38,10 +42,22 @@ public class CardInfoInit {
 		return map;
 	}
 
-	public static  Map<Integer,Integer> getCardShow() {
+	public static Map<Integer, Integer> getCardShow() {
 		return cardShow;
 	}
-	
+
+	public static Map<JLabel, Integer> getMapL() {
+		return mapL;
+	}
+
+	public static Map<JLabel, Integer> getMapB() {
+		return mapB;
+	}
+
+	public static Map<JLabel, Integer> getMapR() {
+		return mapR;
+	}
+
 	/**
 	 * 存放牌的信息
 	 * @param jl 控件信息
@@ -83,7 +99,6 @@ public class CardInfoInit {
 	 */
 	private JLabel[] sortJLbel(JLabel[] temp) {
 		JLabel[] jlabel = new JLabel[CardInitPos.CARDNUM];
-
 		Map<JLabel,Integer> mL = new HashMap<>();
 		Map<JLabel,Integer> mR = new HashMap<>();
 		Map<JLabel,Integer> mB = new HashMap<>();
@@ -127,12 +142,15 @@ public class CardInfoInit {
 		for(int i = 0 ; i < jlabel.length; i++) {			
 			if(i % 3 == 0) {
 				jlabel[i] = listL.get(a).getKey();
+				mapL.put(listL.get(a).getKey(), listL.get(a).getValue());
 				a++;
 			} else if (i % 3 == 1) {
 				jlabel[i] = listB.get(b).getKey();
+				mapB.put(listB.get(b).getKey(), listB.get(b).getValue());
 				b++;
 			} else {
 				jlabel[i] = listR.get(c).getKey();
+				mapR.put(listR.get(c).getKey(), listR.get(c).getValue());
 				c++;
 			}
 		}

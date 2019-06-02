@@ -18,7 +18,7 @@ public class MainView extends JFrame implements CardInitPos,MouseListener,Action
 	JLabel[] jl = new JLabel[files.length];	
 	//左边第一张牌位置，右边第一张牌位置，底部第一张牌位置,发牌位置
 	private int lX = LX,lY = Y,bX = BX,bY= BY,rX = RX, rY= Y,fX = FX, fY = FY;
-	private int cX = CX;	
+	private int cX = CX_B;	
 	
 	JLabel jl_r,jl_l,jl_info;
 	JPanel jp;
@@ -56,30 +56,98 @@ public class MainView extends JFrame implements CardInitPos,MouseListener,Action
 				for (int i = 0; i < CARDNUM; i++) {
 					if (i % 3 == 1) {
 						//消除已经出的牌
-						if (jl[i].getY() == CX) {
+						if (jl[i].getY() == CX_B) {
 							jl[i].setVisible(false);
 						} 
 						if (jl[i].getY() == BY - 41) {
-							jl[i].setLocation(cX -= 30, CX);
-							ci.removCardInfo(jl[i]);
+							jl[i].setLocation(cX -= 30, CX_B);							
 							sc.clearSendInfo();
-							jl_info.setText(sc.getSendInfoShow());
+//							jl_info.setText(sc.getSendInfoShow());
 							//思路，将出牌信息写入到文件里面，然后关闭文件，再讲文件里面的信息读出来，判断是哪一个要出牌，
-							ci.saveInfo(0 + ":" + sc.getSendInfoShow() + ":" + 1);		
-							ci.showInfo();
+							ci.saveInfo(0 + ":" + sc.getSendInfoShow() + ":" + 1);
+							ci.removCardInfo(jl[i]);
+							ci.show();
 						} 			
 					}
 				}
+				//对出剩下的牌的位置进行调整	
 				int temp = BX - sc.getSendCardNum() * 17;
-				for (int i = 0; i < CARDNUM; i++) {
-					//对剩下的牌的位置进行调整						
+				for (int i = 0; i < CARDNUM; i++) {					
 					if (jl[i].getY() == BY){							
 						jl[i].setLocation(temp -= 30, BY );	
 					}
 				}
-				cX = CX;
+				cX = CX_B;
 			}
 		}		
+	}
+	
+	public void putCardThread() {
+		new Thread(new Runnable() {			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(2000);
+					while(ci.getListL().size() != 0 && ci.getListB().size() != 0 && ci.getListR().size() != 0) {
+						Thread.sleep(3000);	
+						//右边出牌
+						if(ci.getPutJLable() != null && ci.getPutJLable().getX() == RX) {
+							int num = Y;
+							for (int i = 0; i < CARDNUM; i++) {
+								if(i % 3 == 2 && jl[i].getX() == CX_R) {
+									jl[i].setVisible(false);
+								} 
+							}
+							for (int i = 0; i < CARDNUM; i++) {
+								if(i % 3 == 2 && jl[i].getX() == RX) {
+									jl[i].setLocation(RX, num -= 30);
+								}
+							}
+							JLabel temp = ci.getPutJLable();
+							temp.setLocation(CX_R ,CY_R);
+							ci.removCardInfo(temp);
+							ci.show();
+							
+						} else if(ci.getPutJLable() != null && ci.getPutJLable().getX() == LX) {
+							int num = Y;
+							for (int i = 0; i < CARDNUM; i++) {
+								if(i % 3 == 0 && jl[i].getX() == CX_L) {
+									jl[i].setVisible(false);
+								} 
+							}
+							for (int i = 0; i < CARDNUM; i++) {
+								if(i % 3 == 0 && jl[i].getX() == LX) {
+									jl[i].setLocation(LX, num -= 30);
+								}
+							}
+							JLabel temp = ci.getPutJLable();
+							temp.setLocation(CX_L ,CY_L);
+							ci.removCardInfo(temp);
+							ci.show();
+						} else if(ci.getPutJLable() != null && ci.getPutJLable().getY() == BY) {
+							int num = BX;
+							for (int i = 0; i < CARDNUM; i++) {
+								if(i % 3 == 1 && jl[i].getY() == CX_B) {
+									jl[i].setVisible(false);
+								} 
+							}
+							for (int i = 0; i < CARDNUM; i++) {
+								if(i % 3 == 1 && jl[i].getY() == BY) {
+									jl[i].setLocation(num -= 30, BY);
+								}
+							}
+							JLabel temp = ci.getPutJLable();
+							temp.setLocation(CX_B ,CX_B);
+							ci.removCardInfo(temp);
+							ci.show();
+						} 						
+					}										
+					//显示gameover,某个人获胜
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}				
+			}			
+		}).start(); 
 	}
 	
 	/**
@@ -107,7 +175,7 @@ public class MainView extends JFrame implements CardInitPos,MouseListener,Action
 			cd.saveCardInfo(jl[i], Integer.parseInt(cardName));
 			jl[i].addMouseListener(this);
 		}
-		sc = new SendCard();
+		sc = new SendCard();	
 		ci = new ConnectInfo();
 		jl_l.setBounds(TL_X, T_Y, 100, 100);
 		jl_r.setBounds(TR_X, T_Y, 100, 100);
@@ -134,7 +202,8 @@ public class MainView extends JFrame implements CardInitPos,MouseListener,Action
 		this.setSize(MAIN_X, MAIN_Y);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
-		sendCardThread();
+		sendCardThread();	
+		putCardThread();
 	}
 	
 	/**
@@ -145,7 +214,7 @@ public class MainView extends JFrame implements CardInitPos,MouseListener,Action
 			@Override
 			public void run() {
 				jl = cd.getChangeCardOrder();
-				ci.addCardInfo(jl);
+				ci.saveInfo();
 				//初始化每一张牌的位置
 				for(int i = 0; i < jl.length; i++) {
 					jl[i].setBounds(FX, FY, 132, 165);
@@ -208,7 +277,7 @@ public class MainView extends JFrame implements CardInitPos,MouseListener,Action
 	}
 	
 	/**
-	 * 鼠标移出指定的牌上面，该牌上移
+	 * 鼠标移到指定的牌上面，该牌上移
 	 */
 	@Override
 	public void mouseEntered(MouseEvent e) {

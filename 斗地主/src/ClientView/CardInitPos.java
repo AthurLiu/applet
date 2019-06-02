@@ -27,8 +27,13 @@ public interface CardInitPos {
 	int FX = 500;
 	//发牌位置的y位置
 	int FY = 100;
-	//出牌位置
-	int CX = 500;
+	//出牌位置(下面)
+	int CX_B = 500;
+	//出牌位置左，右
+	int CX_R = 700;
+	int CY_R = 300;
+	int CX_L = 200;
+	int CY_L = 300;
 	
 	//发牌速度
 	int SPEED = 5;
