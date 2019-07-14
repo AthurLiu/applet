@@ -1,0 +1,117 @@
+a{
+	text-decoration: none;
+	color: black;
+	color: gray;
+}
+
+.head{
+	height: 30px;
+	background-color: rgb(228, 227, 227);
+}
+.head >div{
+	width: 1100px;
+	margin: 0px auto;
+	height: 30px;
+	background-color: rgb(228, 227, 227);
+}
+.head div div{
+	height: 30px;
+	line-height: 30px;
+	width: 60px;
+	margin-left: 0px;
+	float: left;
+	font-size: 14px;
+	color: gray;
+}
+.head div a{
+	line-height: 30px;
+	height: 30px;
+	margin-right: 5px;
+	font-size: 14px;
+	color: gray;
+}
+.head div select{
+	line-height: 30px;
+	height: 30px;
+	font-size: 14px;
+	color: gray;
+	background-color: rgb(228, 227, 227);
+	border:0px;
+}
+.head div::after{
+	content: "";
+	clear: both;
+	display: block;
+}
+
+.body{
+	width: 1100px;
+	margin: 0px auto;
+	z-index: 10;
+}
+.location,.location1,.location2,.location3,.location4,.location5{
+	border: 1px solid rgb(228, 227, 227);
+	border-top-color: transparent;
+}
+.location table,.location{
+	width: 350px;
+}
+.location2,.location3,.location4{
+	border-right-color: transparent;
+	border-bottom-color: transparent;
+}
+#website{
+	border: 2px solid rgb(228, 227, 227);
+	border-top-color: transparent;
+	margin-top: -515px;
+}
+#kefu{
+	margin-top: -370px;
+	margin-left: 775px;
+}
+#website,#kefu,#location,#phjd{
+	visibility: hidden;
+}
+.location1 td,.location2 td,.location3 td,.location4 td{
+	width: 110px;
+}
+.location5 td{
+	width: 80px;
+}
+.location1{
+	border-right-color: transparent;
+	border-bottom-color: transparent;
+	border-left-color: transparent;
+}
+.location table,.location1 table,.location2 table,.location3 table,.location4 table,.location5{
+	font-size: 14px;
+	color: gray;
+}
+.location td,.location1 td,.location2 td,.location3 td,.location4 td,.location5 td{
+	height: 30px;
+}
+.location a:hover,.location1 a:hover,.location2 a:hover,.location3 a:hover,.location4 a:hover,.location5 a:hover{
+	color: blue;
+}
+.location6{
+	border: 2px solid rgb(228, 227, 227);
+	border-top-color: transparent;
+	margin-top: -370px;
+	margin-left: 840px;
+}
+.location6 img{
+	height: 80px;
+	border: 2px solid rgb(228, 227, 227);
+}
+.location6 p{
+	font-size: 14px;
+	margin: 0px 20px;
+}
+.location7{
+	height: 160px;
+	z-index: 5;
+}
+.location7 >div{
+	width: 1100px;
+	margin: 0px auto;
+}
