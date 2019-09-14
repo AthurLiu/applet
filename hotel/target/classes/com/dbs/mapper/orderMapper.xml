@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dbs.mapper.OrderMapper"> 
+    <!-- 预定房间管理 -->
+    <update id="updateHouseStateByOrder" parameterType="House">
+    	update house set house_state = 'B' , update_id = #{updateId} , update_time = now() 
+    	where house_id = #{houseId}
+    </update>
+    <insert id="orderAdd" parameterType="Order">
+    	insert into ord(ord_date,user_name,house_id,create_id,create_time,update_id,update_time) 
+    	values(now(),#{userName},#{houseId},#{createId},now(),#{createId},now())
+    </insert>
+    <select id="orderShow" resultMap="house1">
+    	select h.*,p.house_pric,r.user_name,p.house_dep 
+		from ord r,house h,house_price p 
+		where h.house_state = 'B' 
+		and h.house_id = r.house_id and p.house_type = h.house_type order by ord_date desc
+    </select>
+    <select id="selectAllEmptyHouse" resultMap="houses">
+    	select h.*,p.house_pric,p.house_dep from house h,house_price p where h.house_type = p.house_type and h.house_state = 'A'
+    </select> 
+    <select id="selectAllHouse" resultMap="houses">
+    	select h.*,p.house_pric,p.house_dep from house h,house_price p where h.house_type = p.house_type
+    </select>
+    <update id="changeOrderA" parameterType="House">
+    	update house set house_state = 'A' , update_id = #{updateId} , update_time = now() 
+    	where house_id = #{houseId}
+    </update>
+    <update id="changeOrderC" parameterType="House">
+    	update house set house_state = 'C' , house_netst = #{houseNet} , update_id = #{updateId} , update_time = now() 
+    	where house_id = #{houseId}
+    </update>
+    <delete id="deleteOrder" parameterType="House">
+    	delete from ord where house_id = #{houseId}
+    </delete>
+    <select id="ordShow" resultMap="orders">
+    	select * from ord
+    </select> 
+    <select id="selectOrderByName" parameterType="String" resultMap="orders">
+    	select * from ord where user_name = #{userName}
+    </select> 
+    <select id="selectUserIdByUserName" parameterType="String" resultType="int">
+    	select user_id from user where user_name = #{userName}
+    </select>
+    <insert id="userAdd" parameterType="User">
+    	insert into user(user_name,user_sex,user_card,user_addr,user_phon,create_id,create_time,update_id,update_time) 
+    	values(#{userName},#{userSex},#{userCard},#{userAddress},#{userPhone},#{createId},now(),#{createId},now())
+    </insert>
+    <insert id="reserveAdd" parameterType="House">
+    	insert into reserve(user_id,house_id,house_in,house_net,house_dep,create_id,create_time,update_id,update_time) 
+    	values(#{createId},#{houseId},now(),#{houseNet},#{houseDep},#{updateId},now(),#{updateId},now())
+    </insert>
+    
+    <resultMap type="House" id="house1">
+    	<id property="houseId" column="house_id" javaType="int" jdbcType="INTEGER"></id>
+    	<result property="houseLoc" column="house_loc" javaType="String" jdbcType="VARCHAR"></result>
+    	<result property="houseType" column="house_type" javaType="String" jdbcType="CHAR"></result>
+    	<result property="houseArt" column="house_art" javaType="String" jdbcType="CHAR"></result>
+    	<result property="houseState" column="house_state" javaType="String" jdbcType="CHAR"></result>
+    	<result property="housePrice" column="house_pric" javaType="Double" jdbcType="DOUBLE"></result>
+    	<result property="houseDep" column="house_dep" javaType="Double" jdbcType="DOUBLE"></result>
+    	<result property="updateTime" column="user_name" javaType="String" jdbcType="VARCHAR"></result>
+    	<result property="createTime" column="update_time" javaType="String" jdbcType="VARCHAR"></result>
+    </resultMap>
+    <resultMap type="House" id="houses">
+    	<id property="houseId" column="house_id" javaType="int" jdbcType="INTEGER"></id>
+    	<result property="houseLoc" column="house_loc" javaType="String" jdbcType="VARCHAR"></result>
+    	<result property="houseType" column="house_type" javaType="String" jdbcType="CHAR"></result>
+    	<result property="houseArt" column="house_art" javaType="String" jdbcType="CHAR"></result>
+    	<result property="houseState" column="house_state" javaType="String" jdbcType="CHAR"></result>
+    	<result property="housePrice" column="house_pric" javaType="Double" jdbcType="DOUBLE"></result>
+    	<result property="houseDep" column="house_dep" javaType="Double" jdbcType="DOUBLE"></result>
+    	<result property="createId" column="create_id" javaType="int" jdbcType="INTEGER"></result>
+    	<result property="updateId" column="update_id" javaType="int" jdbcType="INTEGER"></result>
+    	<result property="createTime" column="create_time" javaType="String" jdbcType="VARCHAR"></result>
+    	<result property="updateTime" column="update_time" javaType="String" jdbcType="VARCHAR"></result>
+    </resultMap>
+      <resultMap type="Order" id="orders">
+    	<id property="orderId" column="ord_id" javaType="int" jdbcType="INTEGER"></id>
+    	<result property="orderDate" column="ord_date" javaType="String" jdbcType="VARCHAR"></result>
+    	<result property="userName" column="user_name" javaType="String" jdbcType="VARCHAR"></result>
+    	<result property="houseId" column="house_id" javaType="int" jdbcType="INTEGER"></result>
+    </resultMap>
+</mapper>
+
+
+
+
+
+

@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>员工注册</title>
+        <script type="text/javascript" src="js/jquery-3.3.1.js"></script>
+        <script type="text/javascript" src="js/register.js"></script>
+        <link rel="stylesheet" href="css/register.css">
+    </head>
+    <body style="background-image: url('image/hotel.jpg')">
+        <form id="register">
+            <table border="1">
+                <tr>
+                    <td colspan="2">
+                        <strong>员工注册</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>用&nbsp;&nbsp;户&nbsp;&nbsp;名</td>
+                    <td><input onblur="isExit()" type="text" name="empName"></td>
+                </tr>
+                <tr>
+                    <td>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</td>
+                    <td><input type="password" name="empPass"></td>
+                </tr>
+                <tr>
+                    <td>确认密码</td>
+                    <td><input type="password"></td>
+                </tr>
+                <tr>
+                    <td>工&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作</td>
+                    <td>
+                        <select name="empType">
+                            <option value="A">管理员</option>
+                            <option value="B">房管员</option>
+                            <option value="C">收银员</option>
+                            <option value="D">前台接待人员</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    	<a href="login.html">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</a>
+                    </td>
+                    <td>
+                        <input onclick="register()" type="button" value="注&nbsp;&nbsp;&nbsp;&nbsp;册">&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="reset" value="重&nbsp;&nbsp;&nbsp;&nbsp;置">
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <span id="tips"></span>
+        </form>
+    </body>
+</html>

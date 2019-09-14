@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <context:property-placeholder
+   		location="classpath:jdbc.properties"
+   		system-properties-mode="FALLBACK"
+   	/>
+    
+    <bean id="myDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+	   <property name="driverClassName" value="${driverClassName}"></property>
+	   <property name="url" value="${url}"></property>
+	   <property name="username" value="${username}"></property>
+	   <property name="password" value="${password}"></property>
+	   <property name="initialSize" value="${initialSize}"></property>
+	   <property name="maxIdle" value="${maxIdle}"></property>
+	   <property name="minIdle" value="${minIdle}"></property>
+   </bean>
+   
+   <!-- 事务管理器依赖于数据源 -->
+   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+   		<property name="dataSource" ref="myDataSource"></property>
+   </bean>
+   
+   <!-- 开启事务注解 -->
+   <tx:annotation-driven transaction-manager="transactionManager"/>
+   
+   <!-- 配置mybatis工厂 -->
+   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+   		<!-- 注入数据源 -->
+   		<property name="dataSource" ref="myDataSource"></property>
+   		<!-- 指定核心配置文件位置 -->
+   		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+   </bean>
+   
+   <bean id="umapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+   		<property name="mapperInterface" value="com.dbs.mapper.EmpMapper"></property>
+   		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+   </bean>
+   <bean id="hmapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+   		<property name="mapperInterface" value="com.dbs.mapper.HouseMapper"></property>
+   		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+   </bean>
+   <bean id="omapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+   		<property name="mapperInterface" value="com.dbs.mapper.OrderMapper"></property>
+   		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+   </bean>
+   
+    <!-- 实例化DAO -->
+   <bean id="userInfoService1" class="com.dbs.serviceImpl.EmpServiceImp">
+   		<!-- 注入SQLSessionFactory的对象实例 -->
+   		<property name="umapper" ref="umapper"></property>
+   </bean>
+   <bean id="userInfoService2" class="com.dbs.serviceImpl.HouseServiceImp">
+   		<property name="hmapper" ref="hmapper"></property>
+   </bean>
+   <bean id="userInfoService3" class="com.dbs.serviceImpl.OrderServiceImp">
+   		<property name="omapper" ref="omapper"></property>
+   </bean>
+</beans>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dbs.mapper.EmpMapper"> 
+	<!-- 酒店管理信息 -->
+    <select id="selectByEntity" parameterType="Emp" resultMap="emps">
+    	select * from emp where emp_name = #{empName} and emp_pass = #{empPass} and emp_state = 'Y'
+    </select> 
+    <select id="selectById" parameterType="int" resultMap="emps">
+    	select * from emp where emp_id = #{id}
+    </select> 
+    <select id="selectByName" parameterType="Emp" resultMap="emps">
+    	select * from emp where emp_name = #{empName}
+    </select> 
+    <select id="selectAll" resultMap="emps">
+    	select emp_id,emp_name,emp_type,emp_state from emp where emp_id != 1
+    </select>  
+    <insert id="addEmpInfo" parameterType="Emp">
+    	insert into emp(emp_name,emp_pass,emp_type,create_time,update_time) values(#{empName},#{empPass},#{empType},now(),now())
+    </insert>
+    <update id="updateEmpInfo" parameterType="Emp">
+    	update emp e,(select emp_id from emp 
+    	where emp_name = #{empName}) m set e.emp_state = 'Y',e.update_id = m.emp_id,update_time = now() where e.emp_id = #{empId} 
+    </update>  
+    <delete id="deleteEmpInfoById" parameterType="Integer">
+    	delete from emp where emp_id = #{emp_id}
+    </delete>
+    <update id="updateEmpJobInfo" parameterType="Emp">
+    	update emp e,(select emp_id from emp 
+    	where emp_name = #{empName}) m set e.emp_type = #{empType},e.update_id = m.emp_id,update_time = now() where e.emp_id = #{empId}
+    </update>  
+    <update id="updateOwn" parameterType="Emp">
+    	update emp set emp_name = #{empName} , emp_pass = #{empPass} , update_id = emp_id , update_time = now() where emp_id = #{empId} 
+    </update>
+    <update id="updateEmpInfoByName" parameterType="Emp">
+    	update emp set create_id = emp_id , update_id = emp_id where emp_name = #{empName} 
+    </update>
+
+    <resultMap type="Emp" id="emps">
+    	<id property="empId" column="emp_id" javaType="int" jdbcType="INTEGER"></id>
+    	<result property="empName" column="emp_name" javaType="String" jdbcType="VARCHAR"></result>
+    	<result property="empPass" column="emp_pass" javaType="String" jdbcType="VARCHAR"></result>
+    	<result property="empType" column="emp_type" javaType="String" jdbcType="CHAR"></result>
+    	<result property="empState" column="emp_state" javaType="String" jdbcType="CHAR"></result>
+    	<result property="createId" column="create_id" javaType="int" jdbcType="INTEGER"></result>
+    	<result property="updateId" column="update_id" javaType="int" jdbcType="INTEGER"></result>
+    	<result property="createTime" column="create_time" javaType="String" jdbcType="VARCHAR"></result>
+    	<result property="updateTime" column="update_time" javaType="String" jdbcType="VARCHAR"></result>
+    </resultMap>
+</mapper>
+
+
+
+
+
+

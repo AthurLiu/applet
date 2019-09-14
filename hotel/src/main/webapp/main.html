@@ -1,0 +1,277 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>主界面</title>
+		 <script type="text/javascript" src="js/jquery-3.3.1.js"></script>
+		<style>
+			input[type="button"]{
+				background-color:transparent;
+				border:none;
+				color:blue;
+			}
+			form input:hover {
+				color:red;
+			}
+			#B,#C,#D,#A1,#C1,#D1,#A2,#B2,#C2,.left input[type="text"],#emp,#empUpdateOwn{
+				display: none;
+			}
+			span{
+				color:blue;
+			}
+			header{
+				height:130px;
+				background-color: orange;
+				text-align: center;
+			}
+			header >span{
+				font-size: 50px;
+				font-family: '隶书';
+				color:black;
+			}
+			header >p{
+				text-align: left;
+			}
+			.left{
+				background-color: cyan;
+				width:150px;
+				height:820px;
+			}
+			.right{
+				margin-top:-820px;
+				margin-left:150px;
+			}
+			#emp{
+			
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$.ajax({
+			 		url:"/hotel/main1",
+			 		type:"post",
+			 		success:function(data){
+			 			if(data == ""){
+			 				window.location.href="login.html";
+			 			} else {
+			 				var json=eval(data);
+			 				$("#user").html(json[0].empName);
+			 				$('.empGoUpdate').attr('id',json[0].empType);
+			 				$('.empGoAddHouse').attr('id',json[0].empType + '1');
+			 				$('.empGoshowHouse').attr('id',json[0].empType + '1');
+			 				$('.empGoAddOrder').attr('id',json[0].empType + '2');
+			 				$('.empGoChangeOrder').attr('id',json[0].empType + '2');
+			 				$('.empGoShowOrder').attr('id',json[0].empType + '2');
+			 				$('.empGoshowHouseState').attr('id',json[0].empType + '2');
+			 				$("#empName").val(json[0].empName);
+			 			}
+			 		},error:function(error){
+			 			window.location.href="login.html";
+			 		}
+			 	})
+			});
+			empdowmLine = function(){	
+			 	$.ajax({
+			 		url:"/hotel/empdowmLine",
+			 		type:"get",
+			 		success:function(data){
+			 			if(data == "success"){
+			 				window.location.href="login.html";
+			 			}
+			 		},error:function(error){
+			 			window.location.href="main.html";
+			 		}
+			 	})
+			}
+			empGoUpdate = function(){	
+				display();
+				$("#emp").css("display","block");
+			 	$.ajax({
+			 		url:"/hotel/empGoUpdate",
+			 		type:"get",
+			 		success:function(data){
+			 			var json = eval(data);
+			 			var str = "<table border='1'>";
+			 			for(var i = 0; i < json.length; i++){
+			 				if(i == 0){
+			 					str = str + "<tr><td>员工编号</td><td>员工姓名</td><td>员工职位</td><td>员工状态</td></tr>";
+			 				}
+			 				str = str + "<tr>";
+			 				str = str + "<td>" + json[i].empId + "</td>";
+			 				str = str + "<td>" + json[i].empName + "</td>";
+			 				str = str + "<td>" + json[i].empType + "</td>";
+			 				str = str + "<td>" + json[i].empState + "</td>";
+			 				str = str + "</tr>";
+			 			}
+			 			str + "</table>";
+			 			$("#tips").html(str);
+			 		},error:function(error){
+			 			window.location.href="login.html";
+			 		}
+			 	})
+			}
+			empDelete = function(){	
+			 	$.ajax({
+			 		url:"/hotel/empDelete",
+			 		type:"post",
+			 		data: $("#emp").serialize(),
+			 		success:function(data){
+			 			if(data == "success"){
+			 				$("#info").html("员工删除成功");
+			 				empGoUpdate();
+			 			} else {
+			 				$("#info").html("员工删除失败");
+			 			}
+			 		},error:function(error){
+			 			$("#info").html("员工删除操作失败");
+			 		}
+			 	})
+			}
+			empUpdate = function(){	
+			 	$.ajax({
+			 		url:"/hotel/empUpdate",
+			 		type:"post",
+			 		data: $("#emp").serialize(),
+			 		success:function(data){
+			 			if(data == "success"){
+			 				$("#info").html("员工权限激活成功");
+			 				empGoUpdate();
+			 			} else {
+			 				$("#info").html("员工权限激活失败");
+			 			}
+			 		},error:function(error){
+			 			$("#info").html("员工权限激活操作失败");
+			 		}
+			 	})
+			}
+			empUpdateJob = function(){	
+			 	$.ajax({
+			 		url:"/hotel/empUpdateJob",
+			 		type:"post",
+			 		data: $("#emp").serialize(),
+			 		success:function(data){
+			 			if(data == "success"){
+			 				$("#info").html("员工职位修改成功");
+			 				empGoUpdate();
+			 			}
+			 		},error:function(error){
+			 			$("#info").html("员工职位修改失败");
+			 		}
+			 	})
+			}
+			empGoUpdateOwn = function(){
+				display();
+				$("#empUpdateOwn").css("display","block");
+			 	$.ajax({
+			 		url:"/hotel/empGoUpdateOwn",
+			 		type:"post",
+			 		data: $("#empGoUpdateOwn").serialize(),
+			 		success:function(data){
+			 			var json = eval(data);
+			 			var str = "<h2>修改前</h2><table border='1'>";
+			 			str = str + "<tr><td>编号</td><td>姓名</td><td>密码</td><td>工作</td>"
+			 					  +"<td>创建ID</td><td>创建时间</td><td>修改ID</td><td>修改时间</td></tr>";
+		 				str = str + "<tr><td>" + json.empId + "</td>";
+		 				str = str + "<td>" + json.empName + "</td>";
+		 				str = str + "<td>" + json.empPass + "</td>";
+		 				str = str + "<td>" + json.empType + "</td>";
+		 				str = str + "<td>" + json.createId + "</td>";
+		 				str = str + "<td>" + json.createTime + "</td>";
+		 				str = str + "<td>" + json.updateId + "</td>";
+		 				str = str + "<td>" + json.updateTime + "</td></tr></table><h2>修改后</h2>";
+			 			$("#tips").html(str);
+			 			$("#empUpdateOwnId").val(json.empId);
+			 			$("#empUpdateOwnName").val(json.empName);
+			 			$("#empUpdateOwnPass").val(json.empPass);
+			 		},error:function(error){
+			 			window.location.href="login.html";
+			 		}
+			 	})
+			}
+			empUpdateOwn = function(){	
+			 	$.ajax({
+			 		url:"/hotel/empUpdateOwn",
+			 		type:"post",
+			 		data: $("#empUpdateOwn").serialize(),
+			 		success:function(data){
+			 			if(data == "success"){
+			 				$("#info").html("个人信息修改成功");
+			 				empGoUpdateOwn();
+			 			} else {
+			 				$("#info").html("个人信息修改失败");
+			 			}
+			 		},error:function(error){
+			 			$("#info").html("个人信息修改失败");
+			 		}
+			 	})
+			}
+			function display() {
+				$("#empUpdateOwn").css("display","none");
+				$("#emp").css("display","none");
+			}
+		</script>
+	</head>
+	<body style="background-image: url('image/hotel.jpg')">
+		<header>
+			<p>当前用户：<span id="user"></span></p>
+			<span>hotel</span>
+		</header>
+		<div class="left">
+			<form action="empGoUpdate" method="get" class="empGoUpdate" id="${emp1.empType}">
+				<input onclick="empGoUpdate()" type="button" value="员工信息管理" title="员工信息修改">
+			</form>
+			<form action="empGoAddHouse" method="get" class="empGoAddHouse" id="${emp1.empType}1">
+				<input onclick="empGoAddHouse()" type="button" value="添加房屋信息" title="添加房屋信息">
+			</form>
+			<form action="empGoshowHouse" method="get" class="empGoshowHouse" id="${emp1.empType}1">
+				<input onclick="empGoshowHouse()" type="button" value="显示房屋信息" title="显示房屋信息">
+			</form>
+			<form action="empGoAddOrder" method="get" class="empGoAddOrder" id="${emp1.empType}2">
+				<input onclick="empGoAddOrder()" type="button" value="添加订房信息" title="添加订房信息">
+			</form>
+			<form action="empGoChangeOrder" method="get" class="empGoChangeOrder" id="${emp1.empType}2">
+				<input onclick="empGoAddOrder()" type="button" value="修改订房信息" title="修改订房信息">
+			</form>
+			<form action="empGoShowOrder" method="get" class="empGoShowOrder" id="${emp1.empType}2">
+				<input onclick="empGoShowOrder()" type="button" value="显示订房信息" title="显示订房信息">
+			</form>
+			<form action="empGoshowHouseState" method="get" class="empGoshowHouseState" id="${emp1.empType}2">
+				<input onclick="empGoshowHouseState()" type="button" value="显示房间状态" title="显示房间状态">
+			</form>
+			<form id="empGoUpdateOwn">
+				<input type="text" id="empName" name="empName">
+				<input onclick="empGoUpdateOwn()" type="button" value="个人信息管理" title="个人信息修改">
+			</form>
+			<input onclick="empdowmLine()" type="button" value="退出登录" title="退出登录"><br>
+		</div>
+		<div class="right">
+			<form id="emp">
+				员工编号：<input type="text" name="empId"><span id="info"></span><br><br>
+				<input onclick="empDelete()" type="button" value="删除" title="删除该员工">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input onclick="empUpdate()" type="button" value="激活" title="激活该员工">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<select name="empType">
+                      <option value="B">房管员</option>
+                      <option value="C">收银员</option>
+                      <option value="D">前台</option>
+				</select>
+				<input onclick="empUpdateJob()" type="button" value="修改职位" title="修改该员工职位">
+			</form>
+			<span id="tips"></span>
+			<form action="empUpdateOwn" method="post" id="empUpdateOwn">
+				<table border="1">
+					<tr>
+						<td>用户编号：</td>
+						<td>用户姓名：</td>
+						<td>用户密码：</td>
+						<td>用户操作：</td>
+					</tr>
+					<tr>
+						<td><input id="empUpdateOwnId" type="text" name="empId" readonly="readonly"></td>
+						<td><input id="empUpdateOwnName" type="text" name="empName"></td>
+						<td><input id="empUpdateOwnPass" type="text" name="empPass"></td>
+						<td><input type="button" value="修改信息" title="个人信息修改"></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</body>
+</html>
